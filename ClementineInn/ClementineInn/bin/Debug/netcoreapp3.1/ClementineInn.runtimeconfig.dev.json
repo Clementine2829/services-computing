@@ -1,0 +1,8 @@
+{
+  "runtimeOptions": {
+    "additionalProbingPaths": [
+      "C:\\Users\\CLEMENTINE\\.dotnet\\store\\|arch|\\|tfm|",
+      "C:\\Users\\CLEMENTINE\\.nuget\\packages"
+    ]
+  }
+}
