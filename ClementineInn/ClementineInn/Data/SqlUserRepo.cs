@@ -24,6 +24,16 @@ namespace ClementineInn.Data
             _contect.SaveChanges();
         }
 
+        public void DeleteUser(User user)
+        {
+            if (user == null)
+            {
+                throw new ArgumentNullException(nameof(user));
+            }
+            _contect.Users.Remove(user);
+
+        }
+
         public IEnumerable<User> GetAllUsersByType(string UserType)
         {
             return _contect.Users.ToList().Where(u => u.UserType == UserType);
@@ -40,6 +50,11 @@ namespace ClementineInn.Data
         public bool SaveChanges()
         {
             return (_contect.SaveChanges() >= 0);
+        }
+
+        public void UpdateUser(User User)
+        {
+            //Do nothing
         }
     }
 }

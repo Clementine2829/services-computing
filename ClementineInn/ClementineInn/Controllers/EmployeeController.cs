@@ -2,6 +2,7 @@
 using ClementineInn.Data;
 using ClementineInn.Dtos;
 using ClementineInn.Models;
+using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 
@@ -29,7 +30,7 @@ namespace ClementineInn.Controllers
             return Ok(_mapper.Map<IEnumerable<UserReadDto>>(employees));
         }
 
-        //GET v1/employees/{Id}
+        //GET v1/employees/{UserId}
         [HttpGet("{UserId}", Name = "GetEmployeesById")]
         public ActionResult<User> GetEmployeesById(string UserId)
         {
@@ -63,6 +64,45 @@ namespace ClementineInn.Controllers
 
             return CreatedAtRoute(nameof(GetEmployeesById), new { userId = userReadDto.UserId }, userReadDto);
 
+        }
+
+        //PATCH v1/employee/{UserId}
+        [HttpPatch("{UserId}")]
+        public ActionResult PartialUserUpdate(string UserId, JsonPatchDocument<UserUpdateDto> patchDoc)
+        {
+            var userModelFromRepo = _repository.GetUserById(UserId);
+            if(userModelFromRepo == null)
+            {
+                return NotFound();
+            }
+
+            var userToPatch = _mapper.Map<UserUpdateDto>(userModelFromRepo);
+            patchDoc.ApplyTo(userToPatch, ModelState);
+            if (!TryValidateModel(userToPatch))
+            {
+                return ValidationProblem(ModelState);
+            }
+
+            _mapper.Map(userToPatch, userModelFromRepo); //both side has data, hence this kind of mapping 
+
+            _repository.UpdateUser(userModelFromRepo);
+            _repository.SaveChanges();
+
+            return NoContent();
+        }
+
+        //DELET v1/employee/{UserId}
+        [HttpDelete("{UserId}")]
+        public ActionResult DeleteUser(string UserId)
+        {
+            var userModelFromRepo = _repository.GetUserById(UserId);
+            if (userModelFromRepo == null)
+            {
+                return NotFound();
+            }
+            _repository.DeleteUser(userModelFromRepo);
+            _repository.SaveChanges();
+            return NoContent();
         }
 
     }

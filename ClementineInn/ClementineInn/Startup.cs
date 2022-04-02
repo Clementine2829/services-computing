@@ -13,6 +13,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Newtonsoft.Json.Serialization;
 
 namespace ClementineInn
 {
@@ -31,7 +32,9 @@ namespace ClementineInn
             services.AddDbContext<UserContext>(opt => opt.UseSqlServer
            (Configuration.GetConnectionString("ClementineInnConnection")));
 
-            services.AddControllers();
+            services.AddControllers().AddNewtonsoftJson(s => {
+                s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
+            });
 
             services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
                     

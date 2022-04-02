@@ -1,17 +1,17 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\ClementineInn\\ClementineInn\\ClementineInn.csproj": {}
+    "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\services-computing\\ClementineInn\\ClementineInn\\ClementineInn.csproj": {}
   },
   "projects": {
-    "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\ClementineInn\\ClementineInn\\ClementineInn.csproj": {
+    "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\services-computing\\ClementineInn\\ClementineInn\\ClementineInn.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\ClementineInn\\ClementineInn\\ClementineInn.csproj",
+        "projectUniqueName": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\services-computing\\ClementineInn\\ClementineInn\\ClementineInn.csproj",
         "projectName": "ClementineInn",
-        "projectPath": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\ClementineInn\\ClementineInn\\ClementineInn.csproj",
+        "projectPath": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\services-computing\\ClementineInn\\ClementineInn\\ClementineInn.csproj",
         "packagesPath": "C:\\Users\\CLEMENTINE\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\ClementineInn\\ClementineInn\\obj\\",
+        "outputPath": "C:\\Users\\CLEMENTINE\\Desktop\\Services Computing\\web apps\\services-computing\\ClementineInn\\ClementineInn\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
           "C:\\Users\\CLEMENTINE\\AppData\\Roaming\\NuGet\\NuGet.Config",
@@ -43,6 +43,14 @@
             "AutoMapper.Extensions.Microsoft.DependencyInjection": {
               "target": "Package",
               "version": "[3.2.0, )"
+            },
+            "Microsoft.AspNetCore.JsonPatch": {
+              "target": "Package",
+              "version": "[3.1.23, )"
+            },
+            "Microsoft.AspNetCore.Mvc.NewtonsoftJson": {
+              "target": "Package",
+              "version": "[3.1.23, )"
             },
             "Microsoft.EntityFrameworkCore": {
               "target": "Package",

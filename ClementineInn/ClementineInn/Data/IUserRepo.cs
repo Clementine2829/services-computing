@@ -11,6 +11,8 @@ namespace ClementineInn.Data
         IEnumerable<User> GetAllUsersByType(string UserType);
         User GetUserById(string UserId);
         void CreateUser(User User);
+        void UpdateUser(User User);
+        void DeleteUser(User User);
 
 
 

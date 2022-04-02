@@ -10,6 +10,11 @@ namespace ClementineInn.Data
             throw new System.NotImplementedException();
         }
 
+        public void DeleteUser(User User)
+        {
+            throw new System.NotImplementedException();
+        }
+
         /*public IEnumerable<User> GetAllUsers()
 {
    var users = new List<User> {
@@ -35,6 +40,11 @@ namespace ClementineInn.Data
         }
 
         public bool SaveChanges()
+        {
+            throw new System.NotImplementedException();
+        }
+
+        public void UpdateUser(User User)
         {
             throw new System.NotImplementedException();
         }
