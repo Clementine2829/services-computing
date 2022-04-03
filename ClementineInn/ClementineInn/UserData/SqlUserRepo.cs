@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace ClementineInn.Data
+namespace ClementineInn.UserData
 {
     public class SqlUserRepo : IUserRepo
     {

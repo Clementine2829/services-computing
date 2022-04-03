@@ -1,7 +1,7 @@
 ﻿using ClementineInn.Models;
 using Microsoft.EntityFrameworkCore;
 
-namespace ClementineInn.Data
+namespace ClementineInn.UserData
 {
     public class UserContext : DbContext
     {

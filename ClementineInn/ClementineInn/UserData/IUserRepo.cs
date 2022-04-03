@@ -1,7 +1,7 @@
 ﻿using ClementineInn.Models;
 using System.Collections.Generic;
 
-namespace ClementineInn.Data
+namespace ClementineInn.UserData
 {
     public interface IUserRepo
     {

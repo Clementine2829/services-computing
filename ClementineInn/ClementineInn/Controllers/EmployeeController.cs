@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ClementineInn.Data;
+using ClementineInn.UserData;
 using ClementineInn.Dtos;
 using ClementineInn.Models;
 using Microsoft.AspNetCore.JsonPatch;

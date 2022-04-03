@@ -1,5 +1,5 @@
 using AutoMapper;
-using ClementineInn.Data;
+using ClementineInn.UserData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
