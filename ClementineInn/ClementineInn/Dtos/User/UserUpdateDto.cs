@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClementineInn.Dtos
+namespace ClementineInn.Dtos.User
 {
-    public class UserCreateDto
+    public class UserUpdateDto
     {
         [MaxLength(10)]
         public string UserId { get; set; }

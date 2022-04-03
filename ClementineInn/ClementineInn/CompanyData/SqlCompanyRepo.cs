@@ -43,6 +43,11 @@ namespace ClementineInn.CompanyData
             return _contect.Companies.FirstOrDefault(p => p.CompanyId == CompanyId);
         }
 
+        public Company GetCompanyManagerById(string UserId)
+        {
+            return _contect.Companies.FirstOrDefault(p => p.ManagerId == UserId);
+        }
+
         public bool SaveChanges()
         {
             return (_contect.SaveChanges() >= 0);

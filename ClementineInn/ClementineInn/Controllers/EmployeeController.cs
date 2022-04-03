@@ -1,10 +1,10 @@
 ﻿using AutoMapper;
 using ClementineInn.UserData;
-using ClementineInn.Dtos;
 using ClementineInn.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using ClementineInn.Dtos.User;
 
 namespace ClementineInn.Controllers
 {

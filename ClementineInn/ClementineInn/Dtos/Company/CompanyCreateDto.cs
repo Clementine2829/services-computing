@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClementineInn.Models
+namespace ClementineInn.Dtos.Company
 {
     public class CompanyCreateDto
     {

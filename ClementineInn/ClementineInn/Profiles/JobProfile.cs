@@ -1,5 +1,5 @@
 ﻿using AutoMapper;
-using ClementineInn.Dtos;
+using ClementineInn.Dtos.Job;
 using ClementineInn.Models;
 
 namespace ClementineInn.Profiles

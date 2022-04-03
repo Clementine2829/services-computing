@@ -9,6 +9,7 @@ namespace ClementineInn.CompanyData
 
         IEnumerable<Company> GetAllCompanies();
         Company GetCompanyById(string CompanyId);
+        Company GetCompanyManagerById(string UserId);
         void CreateCompany(Company Company);
         void UpdateCompany(Company Company);
         void DeleteCompany(Company Company);

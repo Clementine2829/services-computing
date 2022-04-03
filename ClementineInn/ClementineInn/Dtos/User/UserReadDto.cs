@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace ClementineInn.Dtos
+namespace ClementineInn.Dtos.User
 {
     public class UserReadDto
     {

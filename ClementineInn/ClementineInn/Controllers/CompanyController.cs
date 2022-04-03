@@ -1,10 +1,11 @@
 ﻿using AutoMapper;
-using ClementineInn.Dtos;
+using ClementineInn.Dtos.Company;
 using ClementineInn.Models;
 using Microsoft.AspNetCore.JsonPatch;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using ClementineInn.CompanyData;
+using ClementineInn.Dtos.User;
 
 namespace ClementineInn.Controllers
 {
@@ -35,14 +36,29 @@ namespace ClementineInn.Controllers
         public ActionResult<Company> GetCompanyById(string CompanyId)
         {
             var company = _repository.GetCompanyById(CompanyId);
-
             if (company != null) 
             {
                 return Ok(_mapper.Map<CompanyReadDto>(company)); 
             } 
             return NotFound();
         }
+ 
+        //GET v1/employers/{UserId}/companies
+        [Route("v1/employers/{UserId}/[controller]")]
+        [HttpGet("{UserId}", Name = "GetCompanyManagedById")]
+        //[HttpGet("{UserId}", Name = "GetCompanyManagedById"), Route("v1/employers/{UserId}/[controller]")]
+        public ActionResult<User> GetCompanyManagedById(string UserId)
+        {
+            System.Console.WriteLine("ID: " + UserId + " [controller]");
+            var employer = _repository.GetCompanyManagerById(UserId); 
 
+            if (employer != null)
+            {
+                return Ok(_mapper.Map<UserReadDto>(employer));
+            }
+            return NotFound();
+        }
+        
         //POST v1/companies
         public ActionResult<CompanyReadDto> CreateCompany(CompanyCreateDto company)
         {
