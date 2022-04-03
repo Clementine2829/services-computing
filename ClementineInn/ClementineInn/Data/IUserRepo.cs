@@ -9,7 +9,7 @@ namespace ClementineInn.Data
 
         /*IEnumerable<User> GetAllUsers();*/
         IEnumerable<User> GetAllUsersByType(string UserType);
-        User GetUserById(string UserId);
+        User GetUserById(string UserId, string UserType);
         void CreateUser(User User);
         void UpdateUser(User User);
         void DeleteUser(User User);

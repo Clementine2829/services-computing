@@ -34,7 +34,7 @@ namespace ClementineInn.Data
             return users;
         }
 
-        public User GetUserById(string UserId)
+        public User GetUserById(string UserId, string UserType)
         {
             return new User { UserId = "L80JSt936679", FirstName = "Clement", LastName = "Mamo", Email = "Clementine@gmail.com", UserType = "Employee" };
         }

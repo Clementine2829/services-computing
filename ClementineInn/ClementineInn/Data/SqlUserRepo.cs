@@ -40,11 +40,11 @@ namespace ClementineInn.Data
             //return _contect.Users.ToList();
         }
 
-        public User GetUserById(string UserId)
+        public User GetUserById(string UserId, string UserType)
         {
 
             //return _contect.Users.FirstOrDefault(p => p.UserId == UserId);
-            return _contect.Users.Where(p => p.UserType == "Employee").FirstOrDefault(p => p.UserId == UserId);
+            return _contect.Users.Where(p => p.UserType == UserType).FirstOrDefault(p => p.UserId == UserId);
         }
 
         public bool SaveChanges()

@@ -11,41 +11,41 @@ namespace ClementineInn.Controllers
     //v1/employees/
     [Route("v1/[controller]")] //how to get to the APIs/controllers
     [ApiController] // out of the box behaviours
-    public class EmployeesController : ControllerBase
+    public class EmployersController : ControllerBase
     {
         private readonly IUserRepo _repository;
         private readonly IMapper _mapper;
-        private readonly string _userType = "Employee";
+        private readonly string _userType = "Employer";
 
-        public EmployeesController(IUserRepo repository, IMapper mapper)
+        public EmployersController(IUserRepo repository, IMapper mapper)
         {
             _repository = repository;
             _mapper = mapper;
         }
 
-        //GET v1/employees/
+        //GET v1/employers/
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetAllEmployees()
         {
-            var employees = _repository.GetAllUsersByType(_userType);
-            return Ok(_mapper.Map<IEnumerable<UserReadDto>>(employees));
+            var employers = _repository.GetAllUsersByType(_userType);
+            return Ok(_mapper.Map<IEnumerable<UserReadDto>>(employers));
         }
 
-        //GET v1/employees/{UserId}
-        [HttpGet("{UserId}", Name = "GetEmployeesById")]
-        public ActionResult<User> GetEmployeesById(string UserId)
+        //GET v1/employers/{UserId}
+        [HttpGet("{UserId}", Name = "GetEmployersById")]
+        public ActionResult<User> GetEmployersById(string UserId)
         {
-            var employee = _repository.GetUserById(UserId, _userType);
+            var employer = _repository.GetUserById(UserId, _userType);
 
-            if (employee != null) 
+            if (employer != null)
             {
-                return Ok(_mapper.Map<UserReadDto>(employee)); 
-            } 
+                return Ok(_mapper.Map<UserReadDto>(employer));
+            }
             return NotFound();
             //return Ok(employee);
         }
 
-        //POST v1/employee
+        //POST v1/employer
         public ActionResult<UserReadDto> CreateUser(UserCreateDto user)
         {
 
@@ -63,7 +63,7 @@ namespace ClementineInn.Controllers
 
             var userReadDto = _mapper.Map<UserReadDto>(userModel);
 
-            return CreatedAtRoute(nameof(GetEmployeesById), new { userId = userReadDto.UserId }, userReadDto);
+            return CreatedAtRoute(nameof(GetEmployersById), new { userId = userReadDto.UserId }, userReadDto);
 
         }
 
@@ -72,7 +72,7 @@ namespace ClementineInn.Controllers
         public ActionResult PartialUserUpdate(string UserId, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
             var userModelFromRepo = _repository.GetUserById(UserId, _userType);
-            if(userModelFromRepo == null)
+            if (userModelFromRepo == null)
             {
                 return NotFound();
             }
