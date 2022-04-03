@@ -9,7 +9,7 @@ using ClementineInn.Models;
 namespace ClementineInn.Controllers
 {
     //v1/jobs/
-    [Route("v1/[controller]")] //how to get to the APIs/controllers
+    //[Route("v1/[controller]")] //how to get to the APIs/controllers
     [ApiController] // out of the box behaviours
     public class JobsController : ControllerBase
     {
@@ -23,6 +23,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/jobs/
+        [Route("v1/[controller]")]
         [HttpGet]
         public ActionResult<IEnumerable<Job>> GetAllJobs()
         {
@@ -31,6 +32,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/jobs/{JobId}
+        [Route("v1/[controller]")]
         [HttpGet("{JobId}", Name = "GetJobById")]
         public ActionResult<Job> GetJobById(string JobId)
         {
@@ -44,6 +46,8 @@ namespace ClementineInn.Controllers
         }
 
         //POST v1/jobs
+        [Route("v1/[controller]")]
+        [HttpPost]
         public ActionResult<JobReadDto> CreateJob(JobCreateDto job)
         {
 
@@ -65,6 +69,7 @@ namespace ClementineInn.Controllers
         }
 
         //PATCH v1/jobs/{JobId}
+        [Route("v1/[controller]")]
         [HttpPatch("{JobId}")]
         public ActionResult PartialJobUpdate(string JobId, JsonPatchDocument<JobUpdateDto> patchDoc)
         {
@@ -90,6 +95,7 @@ namespace ClementineInn.Controllers
         }
 
         //DELET v1/jobs/{JobId}
+        [Route("v1/[controller]")]
         [HttpDelete("{JobId}")]
         public ActionResult DeleteJob(string JobId)
         {

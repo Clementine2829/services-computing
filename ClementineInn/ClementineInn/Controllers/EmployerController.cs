@@ -45,6 +45,7 @@ namespace ClementineInn.Controllers
         }
 
         //POST v1/employer
+        [HttpPost]
         public ActionResult<UserReadDto> CreateUser(UserCreateDto user)
         {
 

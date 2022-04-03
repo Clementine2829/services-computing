@@ -10,7 +10,7 @@ using ClementineInn.Dtos.User;
 namespace ClementineInn.Controllers
 {
     //v1/companies/
-    [Route("v1/[controller]")] //how to get to the APIs/controllers
+    //[Route("v1/[controller]")] //how to get to the APIs/controllers
     [ApiController] // out of the box behaviours
     public class CompaniesController : ControllerBase
     {
@@ -24,6 +24,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/companies/
+        [Route("v1/[controller]")] //how to get to the APIs/controllers
         [HttpGet]
         public ActionResult<IEnumerable<Company>> GetAllCompanies()
         {
@@ -32,6 +33,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/companies/{CompanyId}
+        [Route("v1/[controller]")] //how to get to the APIs/controllers
         [HttpGet("{CompanyId}", Name = "GetCompanyById")]
         public ActionResult<Company> GetCompanyById(string CompanyId)
         {
@@ -44,22 +46,22 @@ namespace ClementineInn.Controllers
         }
  
         //GET v1/employers/{UserId}/companies
-        [Route("v1/employers/{UserId}/[controller]")]
+        [Route("v1/employers/{UserId}/{companies}")]
         [HttpGet("{UserId}", Name = "GetCompanyManagedById")]
-        //[HttpGet("{UserId}", Name = "GetCompanyManagedById"), Route("v1/employers/{UserId}/[controller]")]
-        public ActionResult<User> GetCompanyManagedById(string UserId)
+        public ActionResult<Company> GetCompanyManagedById(string UserId)
         {
-            System.Console.WriteLine("ID: " + UserId + " [controller]");
             var employer = _repository.GetCompanyManagerById(UserId); 
 
             if (employer != null)
             {
-                return Ok(_mapper.Map<UserReadDto>(employer));
+                return Ok(_mapper.Map<CompanyReadDto>(employer));
             }
             return NotFound();
         }
-        
+
         //POST v1/companies
+        [Route("v1/[controller]")] //how to get to the APIs/controllers
+        [HttpPost]
         public ActionResult<CompanyReadDto> CreateCompany(CompanyCreateDto company)
         {
 
@@ -81,6 +83,7 @@ namespace ClementineInn.Controllers
         }
 
         //PATCH v1/companies/{CompanyId}
+        [Route("v1/[controller]")] //how to get to the APIs/controllers
         [HttpPatch("{CompanyId}")]
         public ActionResult PartialCompanyUpdate(string CompanyId, JsonPatchDocument<CompanyUpdateDto> patchDoc)
         {
@@ -106,6 +109,7 @@ namespace ClementineInn.Controllers
         }
 
         //DELET v1/companies/{CompanyId}
+        [Route("v1/[controller]")] //how to get to the APIs/controllers
         [HttpDelete("{CompanyId}")]
         public ActionResult DeleteCompany(string CompanyId)
         {
@@ -118,6 +122,5 @@ namespace ClementineInn.Controllers
             _repository.SaveChanges();
             return NoContent();
         }
-
     }
 }

@@ -15,7 +15,6 @@ namespace ClementineInn.Dtos.Company
         [MaxLength(150)]
         public string CompanyAddress { get; set; }
 
-        [Required]
         [MaxLength(10)]
         public string ManagerId { get; set; }
 
