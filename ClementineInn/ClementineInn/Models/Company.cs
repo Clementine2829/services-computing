@@ -5,6 +5,7 @@ namespace ClementineInn.Models
     public class Company
     {
         [Key]
+        [MaxLength(10)]
         public string CompanyId { get; set; }
 
         [Required]

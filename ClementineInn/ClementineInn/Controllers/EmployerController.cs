@@ -8,7 +8,7 @@ using System.Collections.Generic;
 
 namespace ClementineInn.Controllers
 {
-    //v1/employees/
+    //v1/employers/
     [Route("v1/[controller]")] //how to get to the APIs/controllers
     [ApiController] // out of the box behaviours
     public class EmployersController : ControllerBase
@@ -25,7 +25,7 @@ namespace ClementineInn.Controllers
 
         //GET v1/employers/
         [HttpGet]
-        public ActionResult<IEnumerable<User>> GetAllEmployees()
+        public ActionResult<IEnumerable<User>> GetAllEmployers()
         {
             var employers = _repository.GetAllUsersByType(_userType);
             return Ok(_mapper.Map<IEnumerable<UserReadDto>>(employers));
@@ -42,7 +42,6 @@ namespace ClementineInn.Controllers
                 return Ok(_mapper.Map<UserReadDto>(employer));
             }
             return NotFound();
-            //return Ok(employee);
         }
 
         //POST v1/employer
@@ -67,7 +66,7 @@ namespace ClementineInn.Controllers
 
         }
 
-        //PATCH v1/employee/{UserId}
+        //PATCH v1/employer/{UserId}
         [HttpPatch("{UserId}")]
         public ActionResult PartialUserUpdate(string UserId, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
@@ -92,7 +91,7 @@ namespace ClementineInn.Controllers
             return NoContent();
         }
 
-        //DELET v1/employee/{UserId}
+        //DELET v1/employer/{UserId}
         [HttpDelete("{UserId}")]
         public ActionResult DeleteUser(string UserId)
         {

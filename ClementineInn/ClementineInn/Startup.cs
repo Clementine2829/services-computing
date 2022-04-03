@@ -15,6 +15,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using ClementineInn.CompanyData;
+using ClementineInn.JobData;
 
 namespace ClementineInn
 {
@@ -32,7 +33,11 @@ namespace ClementineInn
         {
             services.AddDbContext<UserContext>(opt => opt.UseSqlServer
            (Configuration.GetConnectionString("ClementineInnConnection")));
+
             services.AddDbContext<CompanyContext>(opt => opt.UseSqlServer
+           (Configuration.GetConnectionString("ClementineInnConnection")));
+
+            services.AddDbContext<JobContext>(opt => opt.UseSqlServer
            (Configuration.GetConnectionString("ClementineInnConnection")));
 
             services.AddControllers().AddNewtonsoftJson(s => {
@@ -43,6 +48,7 @@ namespace ClementineInn
                     
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<ICompanyRepo, SqlCompanyRepo>();
+            services.AddScoped<IJobRepo, SqlJobRepo>();
 
 
         }

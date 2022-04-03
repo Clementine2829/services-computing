@@ -32,7 +32,7 @@ namespace ClementineInn.Controllers
 
         //GET v1/companies/{CompanyId}
         [HttpGet("{CompanyId}", Name = "GetCompanyById")]
-        public ActionResult<User> GetCompanyById(string CompanyId)
+        public ActionResult<Company> GetCompanyById(string CompanyId)
         {
             var company = _repository.GetCompanyById(CompanyId);
 
@@ -44,7 +44,7 @@ namespace ClementineInn.Controllers
         }
 
         //POST v1/companies
-        public ActionResult<UserReadDto> CreateCompany(CompanyCreateDto company)
+        public ActionResult<CompanyReadDto> CreateCompany(CompanyCreateDto company)
         {
 
             if (company == null)
@@ -64,8 +64,8 @@ namespace ClementineInn.Controllers
 
         }
 
-        //PATCH v1/companies/{UserId}
-        [HttpPatch("{UserId}")]
+        //PATCH v1/companies/{CompanyId}
+        [HttpPatch("{CompanyId}")]
         public ActionResult PartialCompanyUpdate(string CompanyId, JsonPatchDocument<CompanyUpdateDto> patchDoc)
         {
             var companyModelFromRepo = _repository.GetCompanyById(CompanyId);
@@ -89,8 +89,8 @@ namespace ClementineInn.Controllers
             return NoContent();
         }
 
-        //DELET v1/companies/{UserId}
-        [HttpDelete("{UserId}")]
+        //DELET v1/companies/{CompanyId}
+        [HttpDelete("{CompanyId}")]
         public ActionResult DeleteCompany(string CompanyId)
         {
             var companyModelFromRepo = _repository.GetCompanyById(CompanyId);

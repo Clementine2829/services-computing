@@ -5,6 +5,7 @@ namespace ClementineInn.Models
     public class User
     {
         [Key]
+        [MaxLength(10)]
         public string UserId { get; set; }
 
         [Required]
