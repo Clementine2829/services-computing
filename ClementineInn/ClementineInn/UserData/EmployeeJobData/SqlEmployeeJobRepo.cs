@@ -34,12 +34,12 @@ namespace ClementineInn.UserData.EmployeeJobData
             _contect.EmployeeJobs.Remove(employeeJob);
 
         }
-        public IEnumerable<EmployeeJob> GetAllEmployeeJobsById(string UserId)
+        public IEnumerable<EmployeeJob> GetAllEmployeeJobsByTheirId(string UserId)
         {
             return _contect.EmployeeJobs.ToList().Where(u => u.EmployeeId == UserId);
         }
 
-        public EmployeeJob GetEmployeeJobById(string UserId)
+        public EmployeeJob GetEmployeeJobByTheirId(string UserId)
         {
             //return _contect.Users.FirstOrDefault(p => p.UserId == UserId);
             return _contect.EmployeeJobs.FirstOrDefault(p => p.EmployeeId == UserId);
@@ -49,10 +49,6 @@ namespace ClementineInn.UserData.EmployeeJobData
         {
             return (_contect.SaveChanges() >= 0);
         }
-
-        public void UpdateUser(User User)
-        {
-            //Do nothing
-        }
+        
     }
 }

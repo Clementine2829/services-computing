@@ -2,20 +2,16 @@ using AutoMapper;
 using ClementineInn.UserData;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Newtonsoft.Json.Serialization;
 using ClementineInn.CompanyData;
 using ClementineInn.JobData;
+using ClementineInn.UserData.EmployeeJobData;
+using ClementineInn.CompanyData.CompanyJobData;
 
 namespace ClementineInn
 {
@@ -40,6 +36,12 @@ namespace ClementineInn
             services.AddDbContext<JobContext>(opt => opt.UseSqlServer
            (Configuration.GetConnectionString("ClementineInnConnection")));
 
+            services.AddDbContext<EmployeeJobContext>(opt => opt.UseSqlServer
+           (Configuration.GetConnectionString("ClementineInnConnection")));
+
+            services.AddDbContext<CompanyJobContext>(opt => opt.UseSqlServer
+           (Configuration.GetConnectionString("ClementineInnConnection")));
+
             services.AddControllers().AddNewtonsoftJson(s => {
                 s.SerializerSettings.ContractResolver = new CamelCasePropertyNamesContractResolver();
             });
@@ -49,6 +51,8 @@ namespace ClementineInn
             services.AddScoped<IUserRepo, SqlUserRepo>();
             services.AddScoped<ICompanyRepo, SqlCompanyRepo>();
             services.AddScoped<IJobRepo, SqlJobRepo>();
+            services.AddScoped<IEmployeeJobRepo, SqlEmployeeJobRepo>();
+            services.AddScoped<ICompanyJobRepo, SqlCompanyJobRepo>();
 
 
         }

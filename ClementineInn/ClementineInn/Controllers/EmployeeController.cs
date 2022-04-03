@@ -9,7 +9,7 @@ using ClementineInn.Dtos.User;
 namespace ClementineInn.Controllers
 {
     //v1/employees/
-    [Route("v1/[controller]")] //how to get to the APIs/controllers
+    //[Route("v1/[controller]")] //how to get to the APIs/controllers
     [ApiController] // out of the box behaviours
     public class EmployeesController : ControllerBase
     {
@@ -24,6 +24,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/employees/
+        [Route("v1/[controller]")]
         [HttpGet]
         public ActionResult<IEnumerable<User>> GetAllEmployees()
         {
@@ -32,6 +33,7 @@ namespace ClementineInn.Controllers
         }
 
         //GET v1/employees/{UserId}
+        [Route("v1/[controller]")]
         [HttpGet("{UserId}", Name = "GetEmployeesById")]
         public ActionResult<User> GetEmployeesById(string UserId)
         {
@@ -46,6 +48,7 @@ namespace ClementineInn.Controllers
         }
 
         //POST v1/employee
+        [Route("v1/[controller]")]
         [HttpPost]
         public ActionResult<UserReadDto> CreateUser(UserCreateDto user)
         {
@@ -69,6 +72,7 @@ namespace ClementineInn.Controllers
         }
 
         //PATCH v1/employee/{UserId}
+        [Route("v1/[controller]")]
         [HttpPatch("{UserId}")]
         public ActionResult PartialUserUpdate(string UserId, JsonPatchDocument<UserUpdateDto> patchDoc)
         {
@@ -94,6 +98,7 @@ namespace ClementineInn.Controllers
         }
 
         //DELET v1/employee/{UserId}
+        [Route("v1/[controller]")]
         [HttpDelete("{UserId}")]
         public ActionResult DeleteUser(string UserId)
         {

@@ -1,11 +1,11 @@
 ﻿using ClementineInn.Models;
 using System.Collections.Generic;
 
-namespace ClementineInn.UserData.EmployeeJobData
+namespace ClementineInn.CompanyData.CompanyJobData
 {
     
     // This methods are only be used within the backend, to get internal information
-    public interface IEmployeeJobRepo
+    public interface ICompanyJobRepo
     {
         bool SaveChanges();
 

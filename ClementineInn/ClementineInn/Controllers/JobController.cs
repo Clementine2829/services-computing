@@ -5,6 +5,9 @@ using System.Collections.Generic;
 using ClementineInn.JobData;
 using ClementineInn.Dtos.Job;
 using ClementineInn.Models;
+using ClementineInn.Dtos.EmployeeJob;
+using ClementineInn.UserData.EmployeeJobData;
+using ClementineInn.CompanyData.CompanyJobData;
 
 namespace ClementineInn.Controllers
 {
@@ -14,6 +17,7 @@ namespace ClementineInn.Controllers
     public class JobsController : ControllerBase
     {
         private readonly IJobRepo _repository;
+        private readonly ICompanyJobRepo _repository2;
         private readonly IMapper _mapper;
 
         public JobsController(IJobRepo repository, IMapper mapper)
@@ -45,12 +49,29 @@ namespace ClementineInn.Controllers
             return NotFound();
         }
 
+        //GET v1/employees/{JobId}/{jobs}
+        [Route("v1/employees/{EmployeeId}/{jobs}")]
+        [HttpGet("{EmployeeId}", Name = "GetEmployeeJobById")]
+        public ActionResult<Job> GetEmployeeJobById(string EmployeeId)
+        {
+            var JobId = _repository2.GetEmployeeJobByTheirId(EmployeeId).JobId;
+            //var JobId = "0SM6KR11HP";
+            System.Console.WriteLine("Job: " + JobId);
+            var job = _repository.GetJobById(JobId);
+            System.Console.WriteLine("Job: " + job);
+
+            if (job != null) 
+            {
+                return Ok(_mapper.Map<JobReadDto>(job)); 
+            } 
+            return NotFound();
+        }
+
         //POST v1/jobs
         [Route("v1/[controller]")]
         [HttpPost]
         public ActionResult<JobReadDto> CreateJob(JobCreateDto job)
         {
-
             if (job == null)
             {
                 return NotFound();
@@ -67,6 +88,29 @@ namespace ClementineInn.Controllers
             return CreatedAtRoute(nameof(GetJobById), new { jobId = jobReadDto.JobId }, jobReadDto);
 
         }
+        
+        /*
+        //POST v1/jobs
+        [Route("v1/employee/{jobs}")]
+        [HttpPost]
+        public ActionResult<EmployeeJobReadDto> CreateEmployeeJob(EmployeeJobCreateDto employeeJob)
+        {
+            if (employeeJob == null)
+            {
+                return NotFound();
+            }
+
+            var employeeJobModel = _mapper.Map<EmployeeJob>(employeeJob);
+
+            _repository.CreateJob(jobModel);
+            _repository.SaveChanges();
+
+            var jobReadDto = _mapper.Map<JobReadDto>(jobModel);
+
+            return CreatedAtRoute(nameof(GetJobById), new { jobId = jobReadDto.JobId }, jobReadDto);
+
+        }
+        */
 
         //PATCH v1/jobs/{JobId}
         [Route("v1/[controller]")]
