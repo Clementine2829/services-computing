@@ -1,0 +1,52 @@
+npm init --yes //to create a pakgage file 
+npm i express // install the express framwork
+npm i -g nodemon // node monitor, install global so
+npm i joi@13.1.0 // this is used for validations of data
+
+
+npm init --yes
+npm install express 
+npm install nodemon
+
+in package.json replace the creipt with the following 
+  "scripts": {
+    "start": "nodemon app.js"
+  },
+
+//install mongoDB
+npm install mongoose
+go to mlab 
+
+npm intall dotenv // this will manage the connection string that store the username and password of the db to connect 
+
+//install body package to use for creating body
+npm install body-parser
+
+
+//make it possible to work with other domains not localhost only 
+npm install cors
+
+
+
+Adding authontication to the app
+
+
+//////////doing authontication app
+intall init
+intall express 
+install nodemo // npm install --save-dev nodemon
+
+///Lets do some validation first 
+//package used is joi
+npm install @hapi/joi
+
+
+//to encrypt the passwords we use 
+npm install bcryptjs
+
+//add a jason web tokens, to make sessions and know who is accessing the system by giving you a token once you access the 
+//system and then whenever you make a request you provide the token and it will knwo that it is you once again 
+npm install jasonwebtokan
+
+
+
