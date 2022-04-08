@@ -3,7 +3,7 @@ const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const { registerValidation, loginValidation } = require('../validation');
+const { registerValidation, loginValidation, updatePassordValidation } = require('../validation');
 
 
 // REGISTER BEW USER
@@ -58,4 +58,37 @@ router.post('/login', async (req, res) => {
 });
 
 
+// UPDTE PASSWORD
+router.patch('/update-password', async (req, res) => {
+    // validate data before making a user
+    const { error } = updatePassordValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message)
+
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    // check if password is correct
+    //arg1 is the password from user, arg2 is the password from the db
+    const validPass = await bcrypt.compare(req.body.oldpassword, user.password);
+    if (!validPass) return res.status(200).send("Invalid old password");
+
+    try {
+        // Hash the password 
+        const salt = await bcrypt.genSalt(10);
+        const hashPassword = await bcrypt.hash(req.body.newpassword, salt);
+
+        const updatedUser = await User.updateOne(
+            { _id: user._id },
+            {
+                $set:
+                {
+                    password: hashPassword
+                }
+            });
+        res.json({ "message": "Password changed successfully" });
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
 module.exports = router;

@@ -12,11 +12,11 @@ router.get('/', verify, async (req, res) => {
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
-    //user is logged in, continue to serve them with jobs
+    //user is logged in, continue to serve them with compnay
 
     try {
         const companies = await Company.find().limit(10);
-        res.status(200).json(res.json(companies));
+        res.status(200).json(companies);
     } catch (err) {
         res.status(500).json({ message: err });
     }
@@ -30,11 +30,12 @@ router.get('/:companyId', verify, async (req, res) => {
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
-    //user is logged in, continue to serve them with jobs
+    //user is logged in, continue to serve them with company
     try {
         const company = await Company.findById(req.params.companyId);
         if (company != null) {
-            res.json(company);
+            res.status(200).send(company);
+            return;
         }
         res.json({ 'message': "Company with the provided ID could not be found" });
     } catch (err) {

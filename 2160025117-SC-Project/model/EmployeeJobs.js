@@ -2,16 +2,14 @@ const mongoose = require('mongoose');
 
 const employeeJobsSchema = mongoose.Schema({
     employee_id: {
-        type: String,
-        required: true,
-        min: 5,
-        max: 1024
-    },
+        type: Schema.Types.ObjectId,
+        ref: 'Employee',
+        required: true
+  },
     job_id: {
-        type: String,
-        required: true,
-        min: 5,
-        max: 1024
+        type: Schema.Types.ObjectId,
+        ref: 'Job',
+        required: true
     }
 });
 

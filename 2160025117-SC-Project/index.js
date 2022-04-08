@@ -7,6 +7,8 @@ const mongoose = require('mongoose');
 const authRoute = require('./routes/auth');
 const jobsRoute = require('./routes/jobs');
 const companiesRoute = require('./routes/companies');
+const employersRoute = require('./routes/employers');
+const employeesRoute = require('./routes/employees');
 
 dotenv.config();
 
@@ -23,6 +25,8 @@ app.use(express.json());
 app.use('/v1/user', authRoute);
 app.use('/v1/jobs', jobsRoute);
 app.use('/v1/companies', companiesRoute);
+app.use('/v1/employers', employersRoute);
+app.use('/v1/employees', employeesRoute);
 
 
 const PORT = process.env.PORT || 3000;

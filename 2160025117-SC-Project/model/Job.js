@@ -13,6 +13,12 @@ const jobSchema = mongoose.Schema({
         min: 5,
         max: 255
     },
+    description: {
+        type: String,
+        required: true,
+        min: 5,
+        max: 1024
+    },
     date: {
         type: Date,
         default: Date.now
