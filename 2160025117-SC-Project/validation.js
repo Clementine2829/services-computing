@@ -77,6 +77,18 @@ const companyJobValidation = (data) => {
     };
     return Joi.validate(data, schema);
 }
+const userValidation = (data) => {
+    const schema = {
+        name: Joi.string().
+            min(6).
+            required(),
+        email: Joi.string().
+            min(6).
+            required().
+            email()
+    };
+    return Joi.validate(data, schema);
+}
 
 module.exports.registerValidation = registerValidation;
 module.exports.loginValidation = loginValidation;
@@ -84,3 +96,4 @@ module.exports.updatePassordValidation = updatePassordValidation ;
 module.exports.companyValidation = companyValidation;
 module.exports.jobValidation = jobValidation;
 module.exports.companyJobValidation = companyJobValidation;
+module.exports.userValidation = userValidation;

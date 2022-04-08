@@ -91,4 +91,20 @@ router.patch('/update-password', async (req, res) => {
         res.status(400).json({ message: err });
     }
 });
+
+
+
+// DELETE PROFILE
+router.delete('/delete-profile', async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    //delete the user
+    const deletedUser = await User.updateOne({ _id: user._id });
+
+    //return the course name
+    res.send(deletedUser);
+});
+
 module.exports = router;

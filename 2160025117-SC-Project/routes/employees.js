@@ -2,6 +2,8 @@ const router = require('express').Router();
 const verify = require('./verifyToken');
 const User = require('../model/User');
 
+const { userValidation } = require('../validation');
+
 router.get('/', verify, async (req, res) => {
 
     // check if the user is logged in or not
@@ -54,28 +56,32 @@ router.patch('/', verify, async (req, res) => {
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
     try {
-        if (req.body.name == "undefined" && req.body.email == "undefined" ) {
+        const usertype = "employee";
+        if (req.body.name == undefined && req.body.email == undefined ) {
             const updatedUser = await User.updateOne(
                 { _id: user._id },
                 {
                     $set:
                     {
-                        usertype: "employer"
+                        usertype: usertype
                     }
                 });
-            console.log("2");
             res.json(updatedUser);
+            console.log("1");
         } else {
+            // validate data before making a user
+            const { error } = updatePassordValidation(req.body);
+            if (error) return res.status(400).send(error.details[0].message)
+
             const updatedUser = await User.updateOne(
                 { _id: user._id },
                 {
                     $set:
                     {
                         name: req.body.name,
-                        email: email,
+                        email: req.body.email,
                     }
                 });
-            console.log("2");
             res.json(updatedUser);
         }
     } catch (err) {
