@@ -1,11 +1,12 @@
 const mongoose = require('mongoose');
+const { Schema } = require('mongoose');
 
 const employeeJobsSchema = mongoose.Schema({
     employee_id: {
         type: Schema.Types.ObjectId,
         ref: 'Employee',
         required: true
-  },
+    },
     job_id: {
         type: Schema.Types.ObjectId,
         ref: 'Job',

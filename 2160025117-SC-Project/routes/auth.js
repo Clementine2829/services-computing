@@ -5,6 +5,24 @@ const bcrypt = require('bcryptjs');
 
 const { registerValidation, loginValidation, updatePassordValidation } = require('../validation');
 
+// VIEW PROFILE
+router.get('/profile', async (req, res) => {
+
+    // check if the user is logged in or not
+    const user = await User.findOne(
+        { user_id: req.body.user_id },
+        {
+            _id: 1,
+            name: 1,
+            email: 1,
+            usertype: 1,
+            date: 1
+        });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    return res.json(user);
+
+});
 
 // REGISTER BEW USER
 router.post('/register', async (req, res) => {
@@ -93,15 +111,13 @@ router.patch('/update-password', async (req, res) => {
 });
 
 
-
-// DELETE PROFILE
 router.delete('/delete-profile', async (req, res) => {
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
     //delete the user
-    const deletedUser = await User.updateOne({ _id: user._id });
+    const deletedUser = await User.deleteOne({ _id: user._id });
 
     //return the course name
     res.send(deletedUser);
