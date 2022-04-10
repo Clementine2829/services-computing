@@ -3,7 +3,7 @@ const verify = require('./verifyToken');
 const User = require('../model/User');
 const Company = require('../model/Company');
 
-const { companyValidation } = require('../validation');
+const { companyValidation, companyUpdateValidation } = require('../validation');
 
 // get all companies
 router.get('/', verify, async (req, res) => {
@@ -79,5 +79,55 @@ router.post('/', verify, async (req, res) => {
     }
     return res.status(200).send("Access denied, please login to access this page");
 });
+
+
+
+// Update the company
+router.patch('/:companyId', async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    // validate data before updating a comapny
+    const { error } = companyUpdateValidation (req.body);
+    if (error) return res.status(400).send(error.details[0].message)
+
+    try {
+        const updatedCompany = await Company.updateOne(
+            { _id: req.params.companyId },
+            {
+                $set:
+                {
+                    name: req.body.name,
+                    address: req.body.address,
+                    manager: req.body.manager
+                }
+            });
+        res.json(updatedCompany);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+// delete job applications for one user 
+router.delete('/:companyId', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+        const company = await Company.findOne({ _id: req.params.companyId });
+
+        if (company != null) {
+            const removeCompany = await Company.remove({ _id: req.params.companyId });
+            return res.send("Company deleted successfully");
+        } else {
+            return res.send("It looks company does not exist for this user");
+        }
+    } catch (err) {
+        return res.status(400).json({ message: err });
+    }
+
+})
 
 module.exports = router;

@@ -5,7 +5,7 @@ const Company = require('../model/Company');
 const CompanyJob = require('../model/CompanyJobs');
 const Job = require('../model/Job');
 
-const { jobValidation, companyJobValidation } = require('../validation');
+const { jobValidation, jobUpdateValidation, companyJobValidation } = require('../validation');
 
 // get all jobs
 router.get('/', verify, async (req, res) => {
@@ -50,7 +50,7 @@ router.post('/', verify, async (req, res) => {
     if (user) {
         const company = await Company.findOne({ manager_id: user.user_id });
         if (company) {
-            // validate data before making a user
+            // validate data before making a job
             const { error } = jobValidation(req.body);
             if (error) return res.status(400).send(error.details[0].message)
 
@@ -78,13 +78,12 @@ router.post('/', verify, async (req, res) => {
 
                 try {
                     const savedCompanyJob = await companyJob.save();
-                    res.send(savedCompanyJob);
+                    //res.send(savedCompanyJob);
                 } catch (e) {
                     //do nothing with the error here
-                    res.status(400).send(e);
+                    return res.status(400).send(e);
                 }
-
-
+                return res.send(savedJob);
             } catch (err) {
                 res.status(400).send(err);
             }
@@ -93,5 +92,55 @@ router.post('/', verify, async (req, res) => {
     }
     return res.status(200).send("Access denied, please login to access this page");
 });
+
+
+// Update the job
+router.patch('/:jobId', async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    // validate data before making a job
+    const { error } = jobUpdateValidation(req.body);
+    if (error) return res.status(400).send(error.details[0].message)
+
+    try {
+        const updatedJob = await Job.updateOne(
+            { _id: req.params.jobId },
+            {
+                $set:
+                {
+                    title: req.body.title,
+                    location: req.body.location,
+                    description: req.body.description
+                }
+            });
+        res.json(updatedJob);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+// delete job applications for one user 
+router.delete('/:jobId', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+        const job = await Job.findOne({ _id: req.params.jobId });
+
+        if (job != null) {
+            const removeJob = await Job.remove({ _id: req.params.jobId });
+            return res.send("Job deleted successfully");
+        } else {
+            return res.send("It looks job does not exist for this user");
+        }
+    } catch (err) {
+        return res.status(400).json({ message: err });
+    }
+
+})
+
 
 module.exports = router;

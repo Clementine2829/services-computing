@@ -1,16 +1,25 @@
 const router = require('express').Router();
+const verify = require('./verifyToken');
 const User = require('../model/User');
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 
-const { registerValidation, loginValidation, updatePassordValidation } = require('../validation');
+const { registerValidation,
+    loginValidation,
+    userValidation,
+    userUpdateValidation,
+    updatePassordValidation } = require('../validation');
 
 // VIEW PROFILE
-router.get('/profile', async (req, res) => {
+router.get('/profile/:userId', async (req, res) => {
 
     // check if the user is logged in or not
-    const user = await User.findOne(
-        { user_id: req.body.user_id },
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    //get the user
+    const tempUser = await User.findOne(
+        { _id: req.params.userId },
         {
             _id: 1,
             name: 1,
@@ -18,9 +27,9 @@ router.get('/profile', async (req, res) => {
             usertype: 1,
             date: 1
         });
-    if (!user) return res.status(200).send("Access denied, please login to access this page");
+    if (!tempUser) return res.status(200).send("User profile with the provided ID not found");
 
-    return res.json(user);
+    return res.json(tempUser);
 
 });
 
@@ -75,7 +84,6 @@ router.post('/login', async (req, res) => {
     //res.send("Logged in!");
 });
 
-
 // UPDTE PASSWORD
 router.patch('/update-password', async (req, res) => {
     // validate data before making a user
@@ -110,17 +118,78 @@ router.patch('/update-password', async (req, res) => {
     }
 });
 
+// UPDATE USER PROFILE
+router.patch('/update-profile/:userId', verify, async (req, res) => {
 
-router.delete('/delete-profile', async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+         //validate data before changing a user details
+        const { error } = userValidation(req.body);
+        if (error) return res.status(400).send(error.details[0].message)
+
+        const updatedUser = await User.updateOne(
+            { _id: req.params.userId },
+            {
+                $set:
+                {
+                    name: req.body.name,
+                    email: req.body.email
+                }
+            });
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+
+});
+
+// UPDATE ENTIRE USER PROFILE
+router.put('/update-profile/:userId', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+        //validate data before changing a user details
+        const { error } = userUpdateValidation(req.body);
+        if (error) return res.status(400).send(error.details[0].message)
+
+        const updatedUser = await User.updateOne(
+            { _id: req.params.userId },
+            {
+                $set:
+                {
+                    name: req.body.name,
+                    email: req.body.email
+                }
+            });
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
+});
+
+
+router.delete('/delete-profile/:userId', async (req, res) => {
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
     //delete the user
-    const deletedUser = await User.deleteOne({ _id: user._id });
-
-    //return the course name
-    res.send(deletedUser);
+    try {
+        const tempUser = await User.findOne({ _id: req.params.userId});
+        if (tempUser != null) {
+            const deletedUser = await User.remove({ _id: req.params.userId });
+            return res.send("User profile deleted successfully");
+        } else {
+            return res.send("It looks like user profile does not exist");
+        }
+    } catch (err) {
+        return res.status(400).json({ message: err });
+    }
 });
 
 module.exports = router;

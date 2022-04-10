@@ -1,12 +1,14 @@
 const router = require('express').Router();
 const verify = require('./verifyToken');
 const User = require('../model/User');
+const EmployeeJobs = require('../model/EmployeeJobs');
+const Job = require('../model/Job');
 
 const { userValidation, employeeJobValidation } = require('../validation');
-const EmployeeJobs = require('../model/EmployeeJobs');
+const { application } = require('express');
 
+//get list of employees
 router.get('/', verify, async (req, res) => {
-
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
@@ -26,105 +28,159 @@ router.get('/', verify, async (req, res) => {
     }
 });
 
-// apply to a job
-router.post('/:jobId/jobs', verify, async (req, res) => {
+// get list of jobs applied by this userID
+router.get('/:userId/jobs', verify, async (req, res) => {
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (user) {
-        const application = await EmployeeJobs.findOne({ employee_id: user._id, job_id: req.params.jobId });
-        //return res.send(application);
+        //const applications = await EmployeeJobs.find({ employee_id: user._id });
+        const applications = await EmployeeJobs
+            //.where({ employee_id: user._id })
+            .aggregate([
+                {
+                    $lookup:
+                    {
+                        from: "jobs",
+                        let: { job_id: "job_id"/*, user_id: "employee_id"*/ },
+                        pipeline: [
+                            {
+                                $match:
+                                {
+                                    $expr:
+                                    {
+                                        $and:
+                                            [
+                                                { $eq: [ "$_id", "$$job_id" ] }
+                                                //{ $gte: [ "$_id", "$$_job_id" ] }
+                                                //employee_id: req.params.jobId
+                                                //"job_id": "62519056424dd3fc4b67ee04"
+                                            ]
+                                    }
+                                }
+                            },
+                            { $project: { _id: 1, title: 1, location: 1, description: 1 }}
+                        ],
+                        as: "job"
+                    }
+                }
+            ]);
+        //console.log(applications);
+        return res.send(applications);
+    } else return res.send("Access denied, you must be logged in to access this page");
+
+});
+//// get list of jobs applied by this userID
+//router.get('/:userId/jobs', verify, async (req, res) => {
+//    // check if the user is logged in or not
+//    const user = await User.findOne({ user_id: req.body.user_id });
+//    if (user) {
+//        //const applications = await EmployeeJobs.find({ employee_id: user._id });
+//        const applications = await EmployeeJobs
+//            //.where({ employee_id: user._id })
+//            .aggregate([
+//                {
+//                    $lookup:
+//                    {
+//                        from: 'jobs',
+//                        localField: 'job_Id',
+//                        foreignField: '_Id',
+//                        as: 'job'
+//                    }
+//                }, {
+//                    $match: {
+//                        //employee_id: req.params.jobId
+//                        //"job_id": "62519056424dd3fc4b67ee04"
+//                    }
+//                }
+//            ]);
+//        console.log(applications);
+//        return res.send(applications);
+//    } else return res.send("Access denied, you must be logged in to access this page");
+
+//});
+
+// get this job applied of this userId
+router.get('/:userId/jobs/:jobId', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (user) {
+        const applications = await EmployeeJobs.find({ employee_id: req.params.userId, job_id: req.params.jobId });
+    }
+
+});
+
+// apply to a job
+router.post('/:userId/jobs/:jobId', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (user) {
+        const application = await EmployeeJobs.findOne({ employee_id: req.params.userId, job_id: req.params.jobId });
+        //return console.log({ employee_id: user._id, job_id: req.params.jobId });
         if (application != null) {
             return res.status(200).send("Operation failed, You already applied to this job");
         } else if (user.usertype == "employee") {
             // validate data before making a user
 
-            const { error } = employeeJobValidation({ user_id: user._id.toString(), job_id: req.params.jobId });
+            const { error } = employeeJobValidation({ employee_id: req.params.userId.toString(), job_id: req.params.jobId });
             if (error) return res.status(400).send(error.details[0].message)
-            
+
             //create new employeejob application
             const employeeJob = new EmployeeJobs({
-                user_id: user._id,
+                employee_id: user._id.toString(),
                 job_id: req.params.jobId
             });
-            return console.log(employeeJob);
+            //return console.log(employeeJob);
 
             //save employeeJob
-            //try {
-            //    const savedEmployeeJob = await EmployeeJobs.save();
-            //    res.send(savedEmployeeJob);
-            //} catch (err) {
-            //    res.status(400).send(err);
-            //}
-        } else es.status(200).send("Operation failed, User must be an employee to be able to apply for job");
-    } else res.status(200).send("Access denied, please login to access this page");
-    return;
+            try {
+                const savedEmployeeJob = await employeeJob.save();
+                return res.status(200).send(savedEmployeeJob);
+            } catch (err) {
+                return res.status(400).send(err);
+            }
+        } else return es.status(200).send("Operation failed, User must be an employee to be able to apply for job");
+    } else return res.status(200).send("Access denied, please login to access this page");
 });
 
-
-// get user by id
-router.get('/:userId', verify, async (req, res) => {
-
-    // check if the user is logged in or not
-    const user = await User.findOne({ user_id: req.body.user_id });
-    if (!user) return res.status(200).send("Access denied, please login to access this page");
-
-    //user is logged in, continue it is safe
-    try {
-        const employee = await User.findOne(
-            { usertype: "employee" },
-            {
-                _id: 1,
-                name: 1,
-                email: 1
-            });
-        return res.status(200).json(employee);
-        res.json({ 'message': "employee with the provided ID could not be found" });
-    } catch (err) {
-        res.json({ message: err });
-    }
-});
-
-// get user by id
-router.patch('/', verify, async (req, res) => {
-
+// delete one job application 
+router.delete('/:userId/jobs/:jobId', verify, async (req, res) => {
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (!user) return res.status(200).send("Access denied, please login to access this page");
 
     try {
-        const usertype = "employer";
-        if (req.body.name == undefined && req.body.email == undefined ) {
-            const updatedUser = await User.updateOne(
-                { _id: user._id },
-                {
-                    $set:
-                    {
-                        usertype: usertype
-                    }
-                });
-            res.json(updatedUser);
-            console.log("1");
+        const employeeJob = await EmployeeJobs.find({ employee_id: req.params.userId, job_id: req.params.jobId });
+        if (employeeJob != null) {
+            const removeEmployeeJob = await EmployeeJobs.remove({ employee_id: req.params.userId, job_id: req.params.jobId });
+            return res.send("Job application deleted successfully" );
         } else {
-            // validate data before making a user
-            const { error } = userValidation(req.body);
-            if (error) return res.status(400).send(error.details[0].message)
-
-            const updatedUser = await User.updateOne(
-                { _id: user._id },
-                {
-                    $set:
-                    {
-                        name: req.body.name,
-                        email: req.body.email
-                    }
-                });
-            res.json(updatedUser);
+            return res.send("It looks like this job application does not exist" );
         }
     } catch (err) {
-        res.status(400).json({ message: err });
+        return res.status(400).json({ message: err });
+    }
+})
+
+// delete job applications for one user 
+router.delete('/:userId/jobs/', verify, async (req, res) => {
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+        const employeeJobs = await EmployeeJobs.find({ employee_id: req.params.userId });
+
+        if (employeeJobs != null) {
+            const removeEmployeeJobs = await EmployeeJobs.remove({ employee_id: req.params.userId });
+            return res.send("Job applications deleted successfully" );
+        } else {
+            return res.send("It looks job application does not exist for this user" );
+        }
+    } catch (err) {
+        return res.status(400).json({ message: err });
     }
 
-});
+})
 
 
 module.exports = router;
