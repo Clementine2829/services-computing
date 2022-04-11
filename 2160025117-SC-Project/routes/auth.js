@@ -143,7 +143,6 @@ router.patch('/update-profile/:userId', verify, async (req, res) => {
     } catch (err) {
         res.status(400).json({ message: err });
     }
-
 });
 
 // UPDATE ENTIRE USER PROFILE

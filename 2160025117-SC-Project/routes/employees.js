@@ -41,25 +41,8 @@ router.get('/:userId/jobs', verify, async (req, res) => {
                     $lookup:
                     {
                         from: "jobs",
-                        let: { job_id: "job_id"/*, user_id: "employee_id"*/ },
-                        pipeline: [
-                            {
-                                $match:
-                                {
-                                    $expr:
-                                    {
-                                        $and:
-                                            [
-                                                { $eq: [ "$_id", "$$job_id" ] }
-                                                //{ $gte: [ "$_id", "$$_job_id" ] }
-                                                //employee_id: req.params.jobId
-                                                //"job_id": "62519056424dd3fc4b67ee04"
-                                            ]
-                                    }
-                                }
-                            },
-                            { $project: { _id: 1, title: 1, location: 1, description: 1 }}
-                        ],
+                        localField: "job_id",
+                        foreignField: "_id",
                         as: "job"
                     }
                 }
@@ -69,43 +52,43 @@ router.get('/:userId/jobs', verify, async (req, res) => {
     } else return res.send("Access denied, you must be logged in to access this page");
 
 });
-//// get list of jobs applied by this userID
-//router.get('/:userId/jobs', verify, async (req, res) => {
-//    // check if the user is logged in or not
-//    const user = await User.findOne({ user_id: req.body.user_id });
-//    if (user) {
-//        //const applications = await EmployeeJobs.find({ employee_id: user._id });
-//        const applications = await EmployeeJobs
-//            //.where({ employee_id: user._id })
-//            .aggregate([
-//                {
-//                    $lookup:
-//                    {
-//                        from: 'jobs',
-//                        localField: 'job_Id',
-//                        foreignField: '_Id',
-//                        as: 'job'
-//                    }
-//                }, {
-//                    $match: {
-//                        //employee_id: req.params.jobId
-//                        //"job_id": "62519056424dd3fc4b67ee04"
-//                    }
-//                }
-//            ]);
-//        console.log(applications);
-//        return res.send(applications);
-//    } else return res.send("Access denied, you must be logged in to access this page");
-
-//});
 
 // get this job applied of this userId
 router.get('/:userId/jobs/:jobId', verify, async (req, res) => {
     // check if the user is logged in or not
     const user = await User.findOne({ user_id: req.body.user_id });
     if (user) {
-        const applications = await EmployeeJobs.find({ employee_id: req.params.userId, job_id: req.params.jobId });
-    }
+        //const applications = await EmployeeJobs.find({ employee_id: user._id });
+        const applications = await EmployeeJobs
+            //.where({ employee_id: user._id })
+            .aggregate([
+                {
+                    $lookup:
+                    {
+                        from: "jobs",
+                        localField: "job_id",
+                        foreignField: "_id",
+                        let: { job_id: req.params.jobId },
+                        pipeline: [
+                            {
+                                $match: {
+                                    $expr: {
+                                        $not: [
+                                            { $eq:["$_id", "$$job_id"]}
+                                        ]
+                                    }
+                                }
+                            },
+                            { $project: { _id: 1, title: 1, description: 1, location: 1 } }
+                        ],
+                        as: "job"
+                    }
+                },
+                { $limit: 1 },
+            ]);
+        //console.log(applications);
+        return res.send(applications);
+    } else return res.send("Access denied, you must be logged in to access this page");
 
 });
 
@@ -140,6 +123,28 @@ router.post('/:userId/jobs/:jobId', verify, async (req, res) => {
             }
         } else return es.status(200).send("Operation failed, User must be an employee to be able to apply for job");
     } else return res.status(200).send("Access denied, please login to access this page");
+});
+
+// change user profile from employee to employer
+router.patch('/:userId', verify, async (req, res) => {
+
+    // check if the user is logged in or not
+    const user = await User.findOne({ user_id: req.body.user_id });
+    if (!user) return res.status(200).send("Access denied, please login to access this page");
+
+    try {
+        const updatedUser = await User.updateOne(
+            { _id: req.params.userId },
+            {
+                $set:
+                {
+                    usertype: "employer"
+                }
+            });
+        res.json(updatedUser);
+    } catch (err) {
+        res.status(400).json({ message: err });
+    }
 });
 
 // delete one job application 
