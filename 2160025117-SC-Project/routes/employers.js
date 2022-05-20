@@ -68,6 +68,7 @@ router.patch('/:userId', verify, async (req, res) => {
         res.status(400).json({ message: err });
     }
 });
+
 // change manager
 router.patch('/:userId/companies/:companyId', verify, async (req, res) => {
     // check if the user is logged in or not

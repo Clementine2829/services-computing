@@ -1,0 +1,15 @@
+npm init, then press enter after loading for few times 
+
+npm install express
+
+install views thingi
+npm install hbs
+
+
+npm i axios // for that weather thing app
+
+https://www.youtube.com/watch?v=dDjzTDN3cy8 30 mins
+
+https://www.youtube.com/watch?v=MDMWb1EM6O0
+
+https://www.youtube.com/watch?v=Vl0H-qTclOg 23 mins
